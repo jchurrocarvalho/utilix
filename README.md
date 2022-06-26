@@ -1,2 +1,2 @@
 # utilix
-Misce linux tools and shell scripts usefull to manage linux and executing command. Mainly started to be a practise bash scripts.
+Misce linux tools and scripts usefull to manage linux boxes and executing commands. Started to be a practise bash scripts.
