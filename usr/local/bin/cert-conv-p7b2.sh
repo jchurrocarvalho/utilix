@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
 #
 # Released under MIT License
-# Copyright (c) 2019-2022 Jose Manuel Churro Carvalho
+# Copyright (c) 2019-2023 Jose Manuel Churro Carvalho
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
 # and associated documentation files (the "Software"), to deal in the Software without restriction, 
 # including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
@@ -22,14 +22,14 @@ usage()
     echo "Usage: cert-conv-p7b2-chain.sh <p7b filename> <filetitle (filename without extension)>"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ]; then
+if [ "$2" = "" ]; then
     usage
     exit 1
 fi
 
-PKEY_PEM_FILENAME="$2"-pkcs7-pkey.pem
-CERT_ALL_CERTS_PEM_FILENAME="$2"-pkcs7-certs.pem
-CERT_ALL_CERTS_DER_FILENAME="$2"-pkcs7-certs.der
+PKEY_PEM_FILENAME="$2"-pkey.pem
+CERT_ALL_CERTS_PEM_FILENAME="$2"-certs.pem
+CERT_ALL_CERTS_DER_FILENAME="$2"-certs.der
 CERT_X509_DER_FILENAME="$2"-x509.der
 
 echo "Exporting private key to $PKEY_PEM_FILENAME in pem format"

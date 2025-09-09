@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
 #
 # Released under MIT License
-# Copyright (c) 2019-2022 Jose Manuel Churro Carvalho
+# Copyright (c) 2019-2023 Jose Manuel Churro Carvalho
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
 # and associated documentation files (the "Software"), to deal in the Software without restriction, 
 # including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
@@ -16,14 +16,26 @@
 
 usage()
 {
-    echo "cert create self-signed nopass with key and crt files"
-    echo "Usage: cert-create-crt-self-signed-nop.sh <certificate file title>"
+    echo "Cert create self-signed nopass with key and crt files"
+    echo "Usage: cert-create-crt-self-signed-nop.sh <certificate file title> <validity> <keysize (2048 / 4096)>"
 }
 
-if [ "$1" = "" ]; then
+if [ "$3" = "" ]; then
     usage
     exit 1
 fi
 
-openssl req -x509 -nodes -days 999 -newkey rsa:4096 -keyout /etc/pki/tls/private/"$1"-ss.key -out /etc/pki/tls/certs/"$1"-ss.crt
+KEYFILENAME="$1"-ss.key
+CERTFILENAME="$1"-ss.crt
+KEYSIZE="$3"
+
+if [ "$2" == "" ]; then
+    VALIDITY="999"
+else
+    VALIDITY="$2"
+fi
+
+#
+
+openssl req -x509 -nodes -days "$VALIDITY" -newkey rsa:"$KEYSIZE" -keyout "$KEYFILENAME" -out "$CERTFILENAME"
 

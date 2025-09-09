@@ -16,16 +16,19 @@
 
 usage()
 {
-    echo "scp to list machines"
-    echo "Usage: scp-bulk.sh <user> <host file list> <dest> <files to copy>"
+    echo "scp recursive to list machines"
+    echo "Usage: scp-bulk-r.sh <user> <host file list> <dest> <files to copy>"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ] || [ "$3" = "" ] || [ "$4" = "" ]; then
+if [ "$4" = "" ]; then
     usage
     exit 1
 fi
 
 hostname=$(eval 'hostname')
+
+targethostname=""
+port=""
 
 files_args=""
 
@@ -42,24 +45,40 @@ do
     i=$((i+1))
 done
 
+i=0
+
 for line in $(cat "$2"); do
     if [ ! -z "$line" ]; then
-        if [ "$hostname" != "$line" ]; then
-            echo "================================================================"
-            echo "host: $line"
-            echo "================================================================"
-            echo ""
-            #scp -r "$4" "$1@$line:$3"
-            #scp -r "$files_args" "$1@$line:$3"
-            i=0
-            for arg in "$@"
-            do
-                if [ $i -ge 3 ]; then
-                    scp "$arg" "$1@$line:$3"
-                fi
+        if [[ ${line:0:1} != "#" ]]; then
+            if [ ${line:0:1} == "P" ]; then
+                port=""
+                i=1
+                while [ $i -lt ${#line} ] && [ ${line:$i:1} != "H" ]; do
+                    port+=${line:$i:1}
+                    i=$((i+1))
+                done
                 i=$((i+1))
-            done
-            echo ""
+                targethostname=${line:$i}
+            else
+                port="22"
+                targethostname=$line
+            fi
+            if [ ! -z "$targethostname" ] && [ ! -z "$port" ] && [ "$hostname" != "$targethostname" ]; then
+                echo "================================================================"
+                echo "host: $targethostname:$port"
+                echo "================================================================"
+                #scp -r "$4" "$1@$targethostname:$3"
+                #scp -r "$files_args" "$1@$targethostname:$3"
+                i=0
+                for arg in "$@"
+                do
+                    if [ $i -ge 3 ]; then
+                        scp -P $port -r "$arg" "$1@$targethostname:$3"
+                    fi
+                    i=$((i+1))
+                done
+                echo ""
+            fi
         fi
     fi
 done

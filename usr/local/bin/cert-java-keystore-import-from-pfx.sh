@@ -20,7 +20,7 @@ usage()
     echo "Usage: cert-java-keystore-import-from-pfx.sh <pfx filename> <keystore filename> <dest store type"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ] || [ "$3" = "" ]; then
+if [ "$3" = "" ]; then
     usage
     exit 1
 fi

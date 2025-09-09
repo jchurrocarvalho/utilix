@@ -20,13 +20,13 @@ usage()
     echo "Usage: firewall-accept-port-with-source.sh <zone> <rule family (ex: ipv4)> <source address (0.0.0.0/0)> <protocol (ex:tcp)> <port>"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ] || [ "$3" = "" ] || [ "$4" = "" ] || [ "$5" = "" ]; then
+if [ "$5" = "" ]; then
     usage
     exit 1
 fi
 
 ADD_RICH_RULE_ARG="rule family=\"$2\" source address=\"$3\" port protocol=\"$4\" port=\"$5\" accept"
-CMD="firewall-cmd --permanent --zone=\"$1\" --add-rich-rule='$ADD_RICH_RULE_ARG'"
+CMD="firewall-cmd  --zone=\"$1\" --add-rich-rule='$ADD_RICH_RULE_ARG'"
 
-eval "sudo $CMD"
+eval "$CMD"
 

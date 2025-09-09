@@ -20,7 +20,7 @@ usage()
     echo "Usage: secompile.sh <destination path> <policy name module>"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ]; then
+if [ "$2" = "" ]; then
     usage
     exit 1
 fi

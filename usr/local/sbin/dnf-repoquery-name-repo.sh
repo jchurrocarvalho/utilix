@@ -18,5 +18,5 @@
 # --installed, --all, etc ...
 #
 
-dnf repoquery --queryformat '%40{name}%32{reponame}' "$@"
+dnf repoquery --queryformat '%40{name}%32{reponame}\n' "$@"
 

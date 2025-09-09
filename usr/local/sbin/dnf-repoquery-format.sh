@@ -18,5 +18,5 @@
 # --installed, --all, etc ...
 #
 
-dnf repoquery --queryformat '%40{name}%2{epoch}%16{version}%8{arch}%32{reponame}\t%{evr}' "$@"
+dnf repoquery --queryformat '%40{name}%2{epoch}%16{version}%8{arch}%32{reponame}\t%{evr}\n' "$@"
 

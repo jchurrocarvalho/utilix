@@ -20,7 +20,7 @@ usage()
     echo "Usage: cert-java-keystore-import-cert.sh <alias> <keystore filename> <cert filename>"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ] || [ "$3" = "" ]; then
+if [ "$3" = "" ]; then
     usage
     exit 1
 fi

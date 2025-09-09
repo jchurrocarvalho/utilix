@@ -17,18 +17,28 @@
 usage()
 {
     echo "ipa getcert request for HTTP Virtual Host"
-    echo "Usage: ipa-http-service-cert-request <virtual host> <hostname>"
+    echo "Usage: ipa-http-service-cert-request <virtual host> <hostname (managed by)>"
+    echo "Remember to create the DNS entry first"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ]; then
+if [ "$2" = "" ]; then
     usage
     exit 1
 fi
 
-ipa host-add "$1"
-ipa host-add-managedby "$1" --hosts="$2"
-ipa service-add HTTP/"$1"
-ipa service-add-host HTTP/"$1" --hosts="$2"
+echo -n "Have you already created the DNS entry? (Press [y] to continue or any key else to stop): "
+read dns_entry_already_created
 
-ipa-getcert request -r -f /etc/pki/tls/certs/"$1".crt -k /etc/pki/tls/private/"$1".key -N CN="$1" -D "$1" -K HTTP/"$1"
+if [ "$dns_entry_already_created" = "y" ] || [ "$dns_entry_already_created" = "Y" ]; then
+    ipa host-add "$1"
+    ipa host-add-managedby "$1" --hosts="$2"
+    ipa service-add HTTP/"$1"
+    ipa service-add-host HTTP/"$1" --hosts="$2"
+
+    ipa-getcert request -r -f /etc/pki/tls/certs/http_"$1".crt -k /etc/pki/tls/private/http_"$1".key -N CN="$1" -D "$1" -K HTTP/"$1"
+    
+    exit 0
+else
+    exit 1
+fi
 

@@ -20,7 +20,7 @@ usage()
     echo "Usage: ipa-http-service-cert-request <path to nssdb database> <hostname> <realm> <dns domain> <nickname for cert>"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ] || [ "$3" = "" ] || [ "$4" = "" ] || [ "$5" = "" ]; then
+if [ "$5" = "" ]; then
     usage
     exit 1
 fi

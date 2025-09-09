@@ -22,7 +22,7 @@ usage()
     echo "Usage: cert-extract-crt-key-from-pem.sh <pem filename> <file title (filename without extension)>"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ]; then
+if [ "$2" = "" ]; then
     usage
     exit 1
 fi

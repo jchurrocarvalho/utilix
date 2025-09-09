@@ -20,7 +20,7 @@ usage()
     echo "Usage: dnf-remote.sh <user> <host> <... dnf options ...>"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ]; then
+if [ "$3" = "" ]; then
     usage
     exit 1
 fi

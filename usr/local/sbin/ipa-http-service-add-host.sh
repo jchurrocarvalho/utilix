@@ -20,7 +20,7 @@ usage()
     echo "Usage: ipa-http-service-add-host <machine to grant cert (current?)> <hostname>"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ]; then
+if [ "$2" = "" ]; then
     usage
     exit 1
 fi

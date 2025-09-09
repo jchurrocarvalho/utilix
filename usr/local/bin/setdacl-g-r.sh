@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #
 # Released under MIT License
@@ -17,17 +17,42 @@
 usage()
 {
     echo "set default acl group recursive"
-	echo "Usage: setdacl-g-r <path> <group>"
+	echo "Usage: setdacl-g-r <group> <path> ..."
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ]; then
+if [ "$2" = "" ]; then
     usage
     exit 1
 fi
 
-find "$1" -type d -perm -g+rwx -exec setfacl -dm g:$2:rwx {} \;
-find "$1" -type d -perm -g+rx ! -perm -g=w -exec setfacl -dm g:$2:rx {} \;
-find "$1" -type d -perm -g+r ! -perm /g=wx -exec setfacl -dm g:$2:r {} \;
+path_args=""
+
+i=0
+
+for arg in "$@"
+do
+    if [ $i -ge 1 ]; then
+        if [ "$path_args" != "" ]; then
+            path_args+=" "
+        fi
+        path_args+="$arg"
+    fi
+    i=$((i+1))
+done
+
+#
+
+i=0
+
+for arg in "$@"
+do
+    if [ $i -ge 1 ]; then
+        find "$arg" -type d -perm -g=rwx -exec setfacl -dm g:$1:rwx {} \;
+        find "$arg" -type d -perm -g=rx ! -perm /g=w -exec setfacl -dm g:$1:rx {} \;
+        find "$arg" -type d -perm -g=r ! -perm -g=wx -exec setfacl -dm g:$1:r {} \;
+    fi
+    i=$((i+1))
+done
 
 exit 0
 

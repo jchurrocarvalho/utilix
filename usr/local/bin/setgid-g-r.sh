@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #
 # Released under MIT License
@@ -16,14 +16,14 @@
 
 usage()
 {
-    echo "Usage: setgidur <path> <username>"
+    echo "Usage: setgidur <username> <path>"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ]; then
+if [ "$2" = "" ]; then
     usage
     exit 1
 fi
 
-find "$1" -type d -exec chmod g+s {} \;
-find "$1" -exec chgrp $2 {} \;
+find "$2" -type d -exec chmod g+s {} \;
+find "$2" -exec chgrp $1 {} \;
 

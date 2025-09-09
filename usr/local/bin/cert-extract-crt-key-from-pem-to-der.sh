@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
 #
 # Released under MIT License
-# Copyright (c) 2019-2022 Jose Manuel Churro Carvalho
+# Copyright (c) 2019-2023 Jose Manuel Churro Carvalho
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
 # and associated documentation files (the "Software"), to deal in the Software without restriction, 
 # including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
@@ -22,14 +22,14 @@ usage()
     echo "Usage: cert-extract-crt-key-from-pem-to-der.sh <pem filename> <file title (filename without extension)>"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ]; then
+if [ "$2" = "" ]; then
     usage
     exit 1
 fi
 
-# Run the following command to export the private key
-openssl rsa -outform der -in "$1" -out "$2"-der.key
+# Export the private key
+openssl rsa -in "$1" -outform der -out "$2"-key.der
 
-# Run the following command to export the certificate
-openssl x509 -outform der -in "$1" -out "$2"-der.crt
+# Export the certificate
+openssl x509 -in "$1" -outform der -out "$2"-crt.der
 

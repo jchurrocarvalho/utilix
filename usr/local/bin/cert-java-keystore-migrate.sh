@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
 #
 # Released under MIT License
-# Copyright (c) 2019-2022 Jose Manuel Churro Carvalho
+# Copyright (c) 2019-2023 Jose Manuel Churro Carvalho
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
 # and associated documentation files (the "Software"), to deal in the Software without restriction, 
 # including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
@@ -19,20 +19,34 @@
 
 usage()
 {
-    echo "cert java migrate keystore format to specified format (PKCS12 is default))"
-    echo "Usage: cert-java-keystore-migrate.sh <keystore filename> <new keystore filename> <store type>"
+    echo "Migrate keystore format to specified format (PKCS12 is default for destination)"
+    echo "If you want to specify source (src) store type. you must specify the destination store type"
+    echo "Store type available values are: jceks, jks, dks, pkcs11, pkcs12 (default)"
+    echo "Usage: cert-java-keystore-migrate.sh <keystore filename> <new keystore filename> <dest store type (optional)> <src store type (optional)>"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ]; then
+KEYSTOREFILENAME="$1"
+NEWKEYSTOREFILENAME="$2"
+if [ "$3" = "" ]; then
+    DESTSTORETYPE="PKCS12"
+else
+    DESTSTORETYPE="$3"
+fi
+
+if [ "$4" = "" ]; then
+    SRCSTORETYPE=""
+else
+    SRCSTORETYPE="$4"
+fi
+
+if [ "$KEYSTOREFILENAME" = "" ] || [ "$NEWKEYSTOREFILENAME" = "" ]; then
     usage
     exit 1
 fi
 
-if [ "$4" = "" ]; then
-    STORETYPE="PKCS12"
+if [ "$SRCSTORETYPE" = "" ]; then
+    keytool -importkeystore -srckeystore "$KEYSTOREFILENAME" -destkeystore "$NEWKEYSTOREFILENAME" -deststoretype $DESTSTORETYPE
 else
-    STORETYPE="$4"
+    keytool -importkeystore -srckeystore "$KEYSTOREFILENAME" -destkeystore "$NEWKEYSTOREFILENAME" -deststoretype $DESTSTORETYPE -srcstoretype $SRCSTORETYPE
 fi
-
-keytool -importkeystore -srckeystore "$1" -destkeystore "$2" -deststoretype $STORETYPE
 

@@ -27,13 +27,34 @@ fi
 
 hostname=$(eval 'hostname')
 
+targethostname=""
+port=""
+
+i=0
+
 for line in $(cat "$1"); do
     if [ ! -z "$line" ]; then
-        if [ "$hostname" != "$line" ]; then
-            echo ">>"
-            echo ">> host: $line"
-            echo ">>"
-            ssh "$line" loginctl
+        if [[ ${line:0:1} != "#" ]]; then
+            if [ ${line:0:1} == "P" ]; then
+                port=""
+                i=1
+                while [ $i -lt ${#line} ] && [ ${line:$i:1} != "H" ]; do
+                    port+=${line:$i:1}
+                    i=$((i+1))
+                done
+                i=$((i+1))
+                targethostname=${line:$i}
+            else
+                port="22"
+                targethostname=$line
+            fi
+            if [ ! -z "$targethostname" ] && [ ! -z "$port" ] && [ "$hostname" != "$targethostname" ]; then
+                echo "================================================================"
+                echo "host: $targethostname:$port"
+                echo "================================================================"
+                ssh -p $port $targethostname loginctl
+                echo ""
+            fi
         fi
     fi
 done

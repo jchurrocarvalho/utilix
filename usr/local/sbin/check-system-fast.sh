@@ -14,27 +14,27 @@
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-echo ""
 echo "---- System Services: state = failed (systemctl list-units --state=failed) ----"
-echo ""
-sudo systemctl list-units --state=failed --no-pager
+systemctl list-units --state=failed --no-pager --all
 
 echo ""
 echo "---- Login Control (loginctl) ----"
-echo ""
-sudo loginctl
+loginctl
 
 echo ""
 echo "---- Screen List (screen -list) ----"
-echo ""
-sudo screen -list
+screen -list
 
 echo ""
 echo "---- Filesystems (df -hT) ----" 
-echo ""
-sudo df -hT
+df -hT
 
 echo ""
-echo "---- Memory (free -h) ----" 
+echo "---- Memory (free -h), Uptime (uptime) ----" 
+free -h
+uptime
+
 echo ""
-sudo free -h
+echo "---- Environment vars ----"
+set|grep DISPLAY
+

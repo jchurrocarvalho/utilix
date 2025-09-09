@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #
 # Released under MIT License
@@ -19,23 +19,30 @@
 usage()
 {
     echo "cert/key convert from pfx 2 pem"
-    echo "Usage: cert-conv-pfx2pem.sh <pfx filename> <pem no encrypted encoded key filename> <client cert filename> <rsa no passphrase key filename> <encrypted private key filename and all certs>"
+    echo "Usage: cert-conv-pfx2pem.sh <pfx filename> <pem no encrypted private key filename> <client cert filename> <certs filename>"
+    echo "                            <ca certs filename> <rsa no passphrase key filename> <encrypted private key filename and all certs>"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ] || [ "$3" = "" ] || [ "$4" = "" ] || [ "$5" = "" ]; then
+if [ "$7" = "" ]; then
     usage
     exit 1
 fi
 
-echo "Exporting no encrypted encoded private key to $2"
-openssl pkcs12 -in "$1" -nocerts -out "$2" -nodes
+echo "Exporting no encrypted private key to $2"
+openssl pkcs12 -in "$1" -nocerts -out "$2" -noenc
 
 echo "Exporting client certificate to $3"
 openssl pkcs12 -in "$1" -clcerts -nokeys -out "$3"
 
-echo "Exporting rsa key filename without passphrase to $4"
-openssl rsa -in "$2" -out "$4"
+echo "Exporting certificates to $4"
+openssl pkcs12 -in "$1" -nokeys -out "$4"
 
-echo "Exporting encrypted private key and all certs to $5"
-openssl pkcs12 -in "$1" -out "$5"
+echo "Exporting ca certificates to $5"
+openssl pkcs12 -in "$1" -cacerts -nokeys -out "$5"
+
+echo "Exporting rsa key filename without passphrase to $6"
+openssl rsa -in "$2" -out "$6"
+
+echo "Exporting encrypted private key and all certs to $7"
+openssl pkcs12 -in "$1" -out "$7"
 

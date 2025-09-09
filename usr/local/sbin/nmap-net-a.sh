@@ -20,7 +20,7 @@ usage()
     echo "Usage: nmap-net-a <network> <path filetitle (filename without extension)>"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ]; then
+if [ "$2" = "" ]; then
     usage
     exit 1
 fi

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #
 # Released under MIT License
@@ -17,20 +17,44 @@
 usage()
 {
     echo "set acl user recursive"
-    echo "Usage: setacl-u-r <path> <username>"
+    echo "Usage: setacl-u-r <username> <path> ..."
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ]; then
+if [ "$2" = "" ]; then
     usage
     exit 1
 fi
 
-find "$1" -type f -perm -u=rwx -exec setfacl -m u:$2:rwx {} \;
-find "$1" -type f -perm -u=rx ! -perm -u=w -exec setfacl -m u:$2:rx {} \;
-find "$1" -type f -perm -u=rw ! -perm -u=x -exec setfacl -m u:$2:rw {} \;
-find "$1" -type f -perm -u=r ! -perm /u=wx -exec setfacl -m u:$2:r {} \;
-find "$1" -type d -perm -u=rwx -exec setfacl -m u:$2:rwx {} \;
-find "$1" -type d -perm -u=rx ! -perm -u=w -exec setfacl -m u:$2:rx {} \;
+path_args=""
+
+i=0
+
+for arg in "$@"
+do
+    if [ $i -ge 1 ]; then
+        if [ "$path_args" != "" ]; then
+            path_args+=" "
+        fi
+        path_args+="$arg"
+    fi
+    i=$((i+1))
+done
+
+#
+
+i=0
+
+for arg in "$@"
+do
+    if [ $i -ge 1 ]; then
+        find "$arg" -perm -u=rwx -exec setfacl -m u:$1:rwx {} \;
+        find "$arg" -type f -perm -u=rx ! -perm /u=w -exec setfacl -m u:$1:rx {} \;
+        find "$arg" -type f -perm -u=rw ! -perm /u=x -exec setfacl -m u:$1:rw {} \;
+        find "$arg" -type f -perm -u=r ! -perm -u=wx -exec setfacl -m u:$1:r {} \;
+        find "$arg" -type d -perm -u=rx ! -perm /u=w -exec setfacl -m u:$1:rx {} \;
+    fi
+    i=$((i+1))
+done
 
 exit 0
 

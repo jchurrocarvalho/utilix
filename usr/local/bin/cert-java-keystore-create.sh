@@ -2,7 +2,7 @@
 
 #
 # Released under MIT License
-# Copyright (c) 2019-2022 Jose Manuel Churro Carvalho
+# Copyright (c) 2019-2023 Jose Manuel Churro Carvalho
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
 # and associated documentation files (the "Software"), to deal in the Software without restriction, 
 # including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
@@ -16,21 +16,47 @@
 
 usage()
 {
-    echo "cert create java keystore in specified format (PKCS12 is default)"
-    echo "Usage: cert-java-keystore-create.sh <alias> <keystore path> <name> <store type>"
+    echo "Create java keystore in specified format (PKCS12 is default)"
+    echo "Store type available values are: jceks, jks, dks, pkcs11, pkcs12 (default)"
+    echo "dname example:"
+    echo "    -dname \"CN=[Common Name], OU=[organisationunit], O=[organisation], L=[town/city], ST=[state/province], C=[GB]\""
+    echo "Usage: cert-java-keystore-create.sh <alias> <keystore path> <keystore name (filename without path)> <validity> <keysize> <store type (optional)> <dname (optional)>"
 }
 
-if [ "$1" = "" ] || [ "$2" = "" ] || [ "$3" = "" ]; then
+#
+# dname example
+# -dname "CN=[Common Name], OU=[organisationunit], O=[organisation], L=[town/city], ST=[state/province], C=[GB]"
+#
+
+ALIAS="$1"
+KEYSTOREPATH="$2"
+KEYSTOREFILENAME="$3"
+KEYSTOREPATHFILENAME="$KEYSTOREPATH"/"$KEYSTOREFILENAME"
+VALIDITY="$4"
+KEYSIZE="$5"
+
+if [ "$6" = "" ]; then
+    STORETYPE="PKCS12"
+else
+    STORETYPE="$6"
+fi
+
+if [ "$7" = "" ]; then
+    DNAME=""
+else
+    DNAME="$7"
+fi
+
+if [ "$ALIAS" = "" ] || [ "$KEYSTOREPATH" = "" ] || [ "$KEYSTOREFILENAME" = "" ] || [ "$VALIDITY" = "" ] || [ "$KEYSIZE" = "" ]; then
     usage
     exit 1
 fi
 
-if [ "$4" = "" ]; then
-    STORETYPE="PKCS12"
-else
-    STORETYPE="$4"
-fi
+mkdir -p "$KEYSTOREPATH"
 
-mkdir -p "$2"
-keytool -genkey -alias "$1" -keyalg RSA -keystore "$2"/"$3" -storetype $STORETYPE
+if [ "$DNAME" = "" ]; then
+    keytool -genkey -alias "$ALIAS" -keyalg RSA -keystore "$KEYSTOREPATHFILENAME" -validity "$VALIDITY" -keysize "$KEYSIZE" -storetype $STORETYPE
+else
+    keytool -genkey -alias "$ALIAS" -keyalg RSA -keystore "$KEYSTOREPATHFILENAME" -validity "$VALIDITY" -keysize "$KEYSIZE" -storetype $STORETYPE -dname "$DNAME"
+fi
 
