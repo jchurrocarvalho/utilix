@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
 #
 # Released under MIT License
-# Copyright (c) 2019-2022 Jose Manuel Churro Carvalho
+# Copyright (c) 2018-2025 Jose Manuel Churro Carvalho
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
 # and associated documentation files (the "Software"), to deal in the Software without restriction, 
 # including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
@@ -50,7 +50,7 @@ echo "Using dnf options: $dnf_args"
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 echo ""
 
-ssh $user@$host_to_dnf bash -c "\"dnf $dnf_args\""
+ssh $user@$host_to_dnf sh -c "\"dnf $dnf_args\""
 
 exit 0
 

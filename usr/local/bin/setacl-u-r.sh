@@ -2,7 +2,7 @@
 
 #
 # Released under MIT License
-# Copyright (c) 2019-2022 Jose Manuel Churro Carvalho
+# Copyright (c) 2018-2025 Jose Manuel Churro Carvalho
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
 # and associated documentation files (the "Software"), to deal in the Software without restriction, 
 # including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
@@ -16,29 +16,14 @@
 
 usage()
 {
-    echo "set acl user recursive"
-    echo "Usage: setacl-u-r <username> <path> ..."
+    echo "set recursive acl user according to owner user perms (several paths)"
+    echo "Usage: setacl-u-r.sh <user> <path> ..."
 }
 
 if [ "$2" = "" ]; then
     usage
     exit 1
 fi
-
-path_args=""
-
-i=0
-
-for arg in "$@"
-do
-    if [ $i -ge 1 ]; then
-        if [ "$path_args" != "" ]; then
-            path_args+=" "
-        fi
-        path_args+="$arg"
-    fi
-    i=$((i+1))
-done
 
 #
 
@@ -50,7 +35,7 @@ do
         find "$arg" -perm -u=rwx -exec setfacl -m u:$1:rwx {} \;
         find "$arg" -type f -perm -u=rx ! -perm /u=w -exec setfacl -m u:$1:rx {} \;
         find "$arg" -type f -perm -u=rw ! -perm /u=x -exec setfacl -m u:$1:rw {} \;
-        find "$arg" -type f -perm -u=r ! -perm -u=wx -exec setfacl -m u:$1:r {} \;
+        find "$arg" -type f -perm -u=r ! -perm /u=w ! -perm /u=x -exec setfacl -m u:$1:r {} \;
         find "$arg" -type d -perm -u=rx ! -perm /u=w -exec setfacl -m u:$1:rx {} \;
     fi
     i=$((i+1))
