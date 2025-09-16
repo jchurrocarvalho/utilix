@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # Released under MIT License
@@ -32,8 +32,7 @@ PORT="$4"
 
 dbnames=$(sudo -u postgres /usr/pgsql-$PGSQLVERSION/bin/psql postgres -t -h "$SERVERNAME" -p "$PORT" -c "select datname from pg_database where datistemplate = false;")
 
-for dbname in $dbnames
-do
+for dbname in $dbnames; do
     echo "Using $dbname"
     echo "$dbname"
 done

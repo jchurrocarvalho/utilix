@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # Released under MIT License
@@ -34,15 +34,14 @@ port=""
 
 i=0
 
-for arg in "$@"
-do
+for arg in "$@"; do
     if [ $i -ge 2 ]; then
         if [ "$command" != "" ]; then
             command+=" "
         fi
         command+="$arg"
     fi
-    i=$((i+1))
+    i=$((i+1));
 done
 
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"

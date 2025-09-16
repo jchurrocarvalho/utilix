@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # Released under MIT License
@@ -18,5 +18,9 @@
 # --installed, --all, etc ...
 #
 
-dnf repoquery --queryformat '%40{name}%32{reponame}\n' "$@"
+if [ -L "/usr/bin/dnf4" ] || [ -e "/usr/bin/dnf4" ]; then
+    dnf repoquery --queryformat '%40{name}%32{reponame}\n' "$@"
+else
+    dnf repoquery --queryformat '%40{name}%32{reponame}' "$@"
+fi
 

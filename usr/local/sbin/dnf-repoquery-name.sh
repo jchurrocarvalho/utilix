@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # Released under MIT License
@@ -14,5 +14,9 @@
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-dnf repoquery --queryformat '%{name}\n' "$@"
+if [ -L "/usr/bin/dnf4" ] || [ -e "/usr/bin/dnf4" ]; then
+    dnf repoquery --queryformat '%{name}\n' "$@"
+else
+    dnf repoquery --queryformat '%{name}' "$@"
+fi
 

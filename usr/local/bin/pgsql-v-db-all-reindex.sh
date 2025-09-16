@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # Released under MIT License
@@ -32,8 +32,7 @@ PORT="$4"
 
 dbnames=$(sudo -u postgres /usr/pgsql-$PGSQLVERSION/bin/psql postgres -t -h "$SERVERNAME" -p "$PORT" -c "select datname from pg_database where datistemplate = false and datname <> 'postgres';")
 
-for itdbname in $dbnames
-do
+for itdbname in $dbnames; do
     echo "Using $itdbname"
     sudo -u postgres /usr/pgsql-$PGSQLVERSION/bin/psql "$itdbname" -h "$SERVERNAME" -p "$PORT" -c "reindex database $itdbname;"
 done

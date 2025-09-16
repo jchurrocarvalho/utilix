@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # Released under MIT License
@@ -16,7 +16,7 @@
 
 usage()
 {
-    echo "cert util to list certificates in a nssdb store"
+    echo "cert to list certificates in a nssdb store"
     echo "Usage: cert-list-nssdb.sh <nssdb path>"
 }
 

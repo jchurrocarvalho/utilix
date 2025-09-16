@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # Released under MIT License
@@ -33,15 +33,14 @@ dnf_args=""
 
 i=0
 
-for arg in "$@"
-do
+for arg in "$@"; do
     if [ $i -ge 2 ]; then
         if [ "$dnf_args" != "" ]; then
             dnf_args+=" "
         fi
         dnf_args+="$arg"
     fi
-    i=$((i+1))
+    i=$((i+1));
 done
 
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"

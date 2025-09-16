@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # Released under MIT License
@@ -34,15 +34,14 @@ files_args=""
 
 i=0
 
-for arg in "$@"
-do
+for arg in "$@"; do
     if [ $i -ge 3 ]; then
         if [ "$files_args" != "" ]; then
             files_args+=" "
         fi
         files_args+="$arg"
     fi
-    i=$((i+1))
+    i=$((i+1));
 done
 
 i=0
