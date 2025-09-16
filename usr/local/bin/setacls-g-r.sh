@@ -29,86 +29,81 @@ fi
 acl_args=""
 i=0
 
-for arg in "$@"
-do
+for arg in "$@"; do
     if [ $i -ge 1 ]; then
         if [ "$acl_args" != "" ]; then
             acl_args+=","
         fi
         acl_args+="g:$arg:rwx"
     fi
-    i=$((i+1))
+    i=$((i+1));
 done
 
-find "$1" -perm -g=rwx -exec setfacl -m $acl_args {} \;
+find -P "$1" ! -type l -perm -g=rwx -exec setfacl -m $acl_args {} \;
 
 #
 acl_args=""
 i=0
 
-for arg in "$@"
-do
+for arg in "$@"; do
     if [ $i -ge 1 ]; then
         if [ "$acl_args" != "" ]; then
             acl_args+=","
         fi
         acl_args+="g:$arg:rx"
     fi
-    i=$((i+1))
+    i=$((i+1));
 done
 
-find "$1" -type f -perm -g=rx ! -perm /g=w -exec setfacl -m $acl_args {} \;
+find -P "$1" ! -type l -perm -g=rx ! -perm /g=w -exec setfacl -m $acl_args {} \;
 
 #
 acl_args=""
 i=0
 
-for arg in "$@"
-do
+for arg in "$@"; do
     if [ $i -ge 1 ]; then
         if [ "$acl_args" != "" ]; then
             acl_args+=","
         fi
         acl_args+="g:$arg:rw"
     fi
-    i=$((i+1))
+    i=$((i+1));
 done
 
-find "$1" -type f -perm -g=rw ! -perm /g=x -exec setfacl -m $acl_args {} \;
+find -P "$1" -type f -perm -g=rw ! -perm /g=x -exec setfacl -m $acl_args {} \;
 
 #
 acl_args=""
 i=0
 
-for arg in "$@"
-do
+for arg in "$@"; do
     if [ $i -ge 1 ]; then
         if [ "$acl_args" != "" ]; then
             acl_args+=","
         fi
         acl_args+="g:$arg:r"
     fi
-    i=$((i+1))
+    i=$((i+1));
 done
 
-find "$1" -type f -perm -g=r ! -perm /g=w ! -perm /g=x -exec setfacl -m $acl_args {} \;
+find -P "$1" -type f -perm -g=r ! -perm /g=w ! -perm /g=x -exec setfacl -m $acl_args {} \;
 
 #
 acl_args=""
 i=0
 
-for arg in "$@"
-do
+for arg in "$@"; do
     if [ $i -ge 1 ]; then
         if [ "$acl_args" != "" ]; then
             acl_args+=","
         fi
-        acl_args+="g:$arg:rx"
+        acl_args+="g:$arg:000"
     fi
-    i=$((i+1))
+    i=$((i+1));
 done
 
-find "$1" -type d -perm -g=rx ! -perm /g=w -exec setfacl -m $acl_args {} \;
+find -P "$1" -type d ! -perm /g=r ! -perm /g=w ! -perm /g=x -exec setfacl -m $acl_args {} \;
 
 exit 0
 

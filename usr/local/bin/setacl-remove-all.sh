@@ -30,10 +30,11 @@ fi
 
 i=0
 
-for arg in "$@"
-do
+for arg in "$@"; do
+    echo ">> Path: $arg"
+
     setfacl -R -b -k "$arg"
-    i=$((i+1))
+    i=$((i+1));
 done
 
 exit 0

@@ -29,14 +29,15 @@ fi
 
 i=0
 
-for arg in "$@"
-do
+for arg in "$@"; do
     if [ $i -ge 1 ]; then
-        find "$arg" -type d -perm -g=rwx -exec setfacl -dm g:$1:rwx {} \;
-        find "$arg" -type d -perm -g=rx ! -perm /g=w -exec setfacl -dm g:$1:rx {} \;
-        find "$arg" -type d -perm -g=r ! -perm /g=w ! -perm /g=x -exec setfacl -dm g:$1:r {} \;
+        echo ">> Path: $arg"
+
+        find -P "$arg" -type d -perm -g=rwx -exec setfacl -dm g:$1:rwx {} \;
+        find -P "$arg" -type d -perm -g=rx ! -perm /g=w -exec setfacl -dm g:$1:rx {} \;
+        find -P "$arg" -type d ! -perm /g=r ! -perm /g=w ! -perm /g=x -exec setfacl -dm g:$1:000 {} \;
     fi
-    i=$((i+1))
+    i=$((i+1));
 done
 
 exit 0

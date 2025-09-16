@@ -29,52 +29,49 @@ fi
 acl_args=""
 i=0
 
-for arg in "$@"
-do
+for arg in "$@"; do
     if [ $i -ge 1 ]; then
         if [ "$acl_args" != "" ]; then
             acl_args+=","
         fi
         acl_args+="g:$arg:rwx"
     fi
-    i=$((i+1))
+    i=$((i+1));
 done
 
-find "$1" -type d -perm -g=rwx -exec setfacl -dm $acl_args {} \;
+find -P "$1" -type d -perm -g=rwx -exec setfacl -dm $acl_args {} \;
 
 #
 acl_args=""
 i=0
 
-for arg in "$@"
-do
+for arg in "$@"; do
     if [ $i -ge 1 ]; then
         if [ "$acl_args" != "" ]; then
             acl_args+=","
         fi
         acl_args+="g:$arg:rx"
     fi
-    i=$((i+1))
+    i=$((i+1));
 done
 
-find "$1" -type d -perm -g=rx ! -perm /g=w -exec setfacl -dm $acl_args {} \;
+find -P "$1" -type d -perm -g=rx ! -perm /g=w -exec setfacl -dm $acl_args {} \;
 
 #
 acl_args=""
 i=0
 
-for arg in "$@"
-do
+for arg in "$@"; do
     if [ $i -ge 1 ]; then
         if [ "$acl_args" != "" ]; then
             acl_args+=","
         fi
-        acl_args+="g:$arg:r"
+        acl_args+="g:$arg:000"
     fi
-    i=$((i+1))
+    i=$((i+1));
 done
 
-find "$1" -type d -perm -g=r ! -perm /g=w ! -perm /g=x -exec setfacl -dm $acl_args {} \;
+find -P "$1" -type d ! -perm /g=r ! -perm /g=w ! -perm /g=x -exec setfacl -dm $acl_args {} \;
 
 exit 0
 
