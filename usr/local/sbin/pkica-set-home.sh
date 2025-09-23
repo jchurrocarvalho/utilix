@@ -17,7 +17,7 @@
 usage()
 {
     echo "Set CA home dir for pkica"
-    echo "Usage: pkica-set-ca-home.sh <suffix string or 0 for productio. Use ca-qua to testing for instancen>"
+    echo "Usage: pkica-set-home.sh <suffix string or 0 for production. Use ca-qua to testing for instance>"
 }
 
 if [ "$1" = "" ]; then

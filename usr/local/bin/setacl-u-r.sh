@@ -17,28 +17,40 @@
 usage()
 {
     echo "set recursive acl user according to owner user perms (several paths)"
-    echo "Usage: setacl-u-r.sh <user> <path> ..."
+    echo "if user/group is EMPTY or 0, the acl is set for no named user/group"
+    echo "Usage: setacl-u-r.sh <recalculate mask? (0/1)> <user> <path> ..."
 }
 
-if [ "$2" = "" ]; then
+if [ "$3" = "" ]; then
     usage
     exit 1
 fi
 
+if [ "$1" = "1" ]; then
+    RECALCULATEMASKOPTION=""
+else
+    RECALCULATEMASKOPTION="-n"
+fi
+
 #
+if [ "$2" = "EMPTY" ] || [ "$2" = "0" ]; then
+    USERID=""
+else
+    USERID="$2"
+fi
 
 i=0
 
 for arg in "$@"; do
-    if [ $i -ge 1 ]; then
+    if [ $i -ge 2 ]; then
         echo ">> Path: $arg"
 
-        find -P "$arg" ! -type l -perm -u=rwx -exec setfacl -m u:$1:rwx {} \;
-        find -P "$arg" ! -type l -perm -u=rx ! -perm /u=w -exec setfacl -m u:$1:rx {} \;
-        find -P "$arg" -type f -perm -u=rw ! -perm /u=x -exec setfacl -m u:$1:rw {} \;
-        find -P "$arg" -type f -perm -u=r ! -perm /u=w ! -perm /u=x -exec setfacl -m u:$1:r {} \;
+        find -P "$arg" ! -type l -perm -u=rwx -exec setfacl "$RECALCULATEMASKOPTION" -m u:"$USERID":rwx {} \;
+        find -P "$arg" ! -type l -perm -u=rx ! -perm /u=w -exec setfacl "$RECALCULATEMASKOPTION" -m u:"$USERID":rx {} \;
+        find -P "$arg" -type f -perm -u=rw ! -perm /u=x -exec setfacl "$RECALCULATEMASKOPTION" -m u:"$USERID":rw {} \;
+        find -P "$arg" -type f -perm -u=r ! -perm /u=w ! -perm /u=x -exec setfacl "$RECALCULATEMASKOPTION" -m u:"$USERID":r {} \;
     fi
-    i=$((i+1));
+    i=$((i+1))
 done
 
 exit 0

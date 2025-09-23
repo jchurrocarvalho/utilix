@@ -45,8 +45,8 @@ if [ "$KEYSTOREFILENAME" = "" ] || [ "$NEWKEYSTOREFILENAME" = "" ]; then
 fi
 
 if [ "$SRCSTORETYPE" = "" ]; then
-    keytool -importkeystore -srckeystore "$KEYSTOREFILENAME" -destkeystore "$NEWKEYSTOREFILENAME" -deststoretype $DESTSTORETYPE
+    keytool -importkeystore -srckeystore "$KEYSTOREFILENAME" -destkeystore "$NEWKEYSTOREFILENAME" -deststoretype "$DESTSTORETYPE"
 else
-    keytool -importkeystore -srckeystore "$KEYSTOREFILENAME" -destkeystore "$NEWKEYSTOREFILENAME" -deststoretype $DESTSTORETYPE -srcstoretype $SRCSTORETYPE
+    keytool -importkeystore -srckeystore "$KEYSTOREFILENAME" -destkeystore "$NEWKEYSTOREFILENAME" -deststoretype "$DESTSTORETYPE" -srcstoretype "$SRCSTORETYPE"
 fi
 

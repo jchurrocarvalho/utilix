@@ -41,28 +41,28 @@ for arg in "$@"; do
         fi
         files_args+="$arg"
     fi
-    i=$((i+1));
+    i=$((i+1))
 done
 
 i=0
 
 for line in $(cat "$2"); do
-    if [ ! -z "$line" ]; then
-        if [[ ${line:0:1} != "#" ]]; then
-            if [ ${line:0:1} == "P" ]; then
+    if [ -n "$line" ]; then
+        if [[ "${line:0:1}" != "#" ]]; then
+            if [ "${line:0:1}" = "P" ]; then
                 port=""
                 i=1
-                while [ $i -lt ${#line} ] && [ ${line:$i:1} != "H" ]; do
-                    port+=${line:$i:1}
+                while [ $i -lt "${#line}" ] && [ "${line:$i:1}" != "H" ]; do
+                    port+="${line:$i:1}"
                     i=$((i+1))
                 done
                 i=$((i+1))
-                targethostname=${line:$i}
+                targethostname="${line:$i}"
             else
                 port="22"
-                targethostname=$line
+                targethostname="$line"
             fi
-            if [ ! -z "$targethostname" ] && [ ! -z "$port" ] && [ "$hostname" != "$targethostname" ]; then
+            if [ -n "$targethostname" ] && [ -n "$port" ] && [ "$hostname" != "$targethostname" ]; then
                 echo "================================================================"
                 echo "host: $targethostname:$port"
                 echo "================================================================"
@@ -72,7 +72,7 @@ for line in $(cat "$2"); do
                 for arg in "$@"
                 do
                     if [ $i -ge 3 ]; then
-                        scp -P $port "$arg" "$1@$targethostname:$3"
+                        scp -P "$port" "$arg" "$1@$targethostname:$3"
                     fi
                     i=$((i+1))
                 done

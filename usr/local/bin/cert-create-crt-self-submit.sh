@@ -29,7 +29,7 @@ KEYFILENAME="$3"
 CERTFILENAME="$1"-ss.crt
 CSRFILENAME="$2"
 
-if [ "$4" == "" ] || [ "$4" == "0" ]; then
+if [ "$4" = "" ] || [ "$4" = "0" ]; then
     VALIDITY="999"
 else
     VALIDITY="$4"

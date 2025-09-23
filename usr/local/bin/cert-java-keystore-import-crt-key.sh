@@ -24,12 +24,13 @@ usage()
     echo "Usage: cert-java-keystore-import-crt-key.sh <keystore filename> <store type> <certificate filename> <key filename> <alias>"
 }
 
-DTIMENOW=$(date +%Y%m%d%H%M%S)
+#DTIMENOW=$(date +%Y%m%d%H%M%S)
 
 KEYSTOREFILENAME="$1"
 STORETYPE="$2"
 CERTFILENAME="$3"
 KEYFILENAME="$4"
+
 #DESTKEYPASS="$5"
 #ALIAS="$6"
 ALIAS="$5"

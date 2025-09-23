@@ -17,77 +17,106 @@
 usage()
 {
     echo "set recursive acl user according to owner user perms (several users)"
-    echo "Usage: setacls-u-r.sh <path> <user> ..."
+    echo "if user/group is EMPTY or 0, the acl is set for no named user/group"
+    echo "Usage: setacls-u-r.sh <recalculate mask? (0/1)> <path> <user> ..."
 }
 
-if [ "$2" = "" ]; then
+if [ "$3" = "" ]; then
     usage
     exit 1
 fi
 
-#
-acl_args=""
-i=0
+if [ "$1" = "1" ]; then
+    RECALCULATEMASKOPTION=""
+else
+    RECALCULATEMASKOPTION="-n"
+fi
 
-for arg in "$@"; do
-    if [ $i -ge 1 ]; then
-        if [ "$acl_args" != "" ]; then
-            acl_args+=","
-        fi
-        acl_args+="u:$arg:rwx"
-    fi
-    i=$((i+1));
-done
-
-find -P "$1" ! -type l -perm -u=rwx -exec setfacl -m $acl_args {} \;
+BASEPATH="$2"
 
 #
 acl_args=""
 i=0
 
 for arg in "$@"; do
-    if [ $i -ge 1 ]; then
+    if [ $i -ge 2 ]; then
         if [ "$acl_args" != "" ]; then
             acl_args+=","
         fi
-        acl_args+="u:$arg:rx"
+        if [ "$arg" = "EMPTY" ] || [ "$arg" = "0" ]; then
+            USERID=""
+        else
+            USERID="$arg"
+        fi
+        acl_args+="u:$USERID:rwx"
     fi
-    i=$((i+1));
+    i=$((i+1))
 done
 
-find -P "$1" ! -type l -perm -u=rx ! -perm /u=w -exec setfacl -m $acl_args {} \;
+find -P "$BASEPATH" ! -type l -perm -u=rwx -exec setfacl "$RECALCULATEMASKOPTION" -m "$acl_args" {} \;
 
 #
 acl_args=""
 i=0
 
 for arg in "$@"; do
-    if [ $i -ge 1 ]; then
+    if [ $i -ge 2 ]; then
         if [ "$acl_args" != "" ]; then
             acl_args+=","
         fi
-        acl_args+="u:$arg:rw"
+        if [ "$arg" = "EMPTY" ] || [ "$arg" = "0" ]; then
+            USERID=""
+        else
+            USERID="$arg"
+        fi
+        acl_args+="u:$USERID:rx"
     fi
-    i=$((i+1));
+    i=$((i+1))
 done
 
-find -P "$1" -type f -perm -u=rw ! -perm /u=x -exec setfacl -m $acl_args {} \;
+find -P "$BASEPATH" ! -type l -perm -u=rx ! -perm /u=w -exec setfacl "$RECALCULATEMASKOPTION" -m "$acl_args" {} \;
 
 #
 acl_args=""
 i=0
 
 for arg in "$@"; do
-    if [ $i -ge 1 ]; then
+    if [ $i -ge 2 ]; then
         if [ "$acl_args" != "" ]; then
             acl_args+=","
         fi
-        acl_args+="u:$arg:r"
+        if [ "$arg" = "EMPTY" ] || [ "$arg" = "0" ]; then
+            USERID=""
+        else
+            USERID="$arg"
+        fi
+        acl_args+="u:$USERID:rw"
     fi
-    i=$((i+1));
+    i=$((i+1))
 done
 
-find -P "$1" -type f -perm -u=r ! -perm /u=w ! -perm /u=x -exec setfacl -m $acl_args {} \;
+find -P "$BASEPATH" -type f -perm -u=rw ! -perm /u=x -exec setfacl "$RECALCULATEMASKOPTION" -m "$acl_args" {} \;
+
+#
+acl_args=""
+i=0
+
+for arg in "$@"; do
+    if [ $i -ge 2 ]; then
+        if [ "$acl_args" != "" ]; then
+            acl_args+=","
+        fi
+        if [ "$arg" = "EMPTY" ] || [ "$arg" = "0" ]; then
+            USERID=""
+        else
+            USERID="$arg"
+        fi
+        acl_args+="u:$USERID:r"
+    fi
+    i=$((i+1))
+done
+
+find -P "$BASEPATH" -type f -perm -u=r ! -perm /u=w ! -perm /u=x -exec setfacl "$RECALCULATEMASKOPTION" -m "$acl_args" {} \;
 
 exit 0
 

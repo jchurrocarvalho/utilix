@@ -17,26 +17,38 @@
 usage()
 {
     echo "set recursive default acl user according to owner user perms (several paths)"
-    echo "Usage: setacl-def-u-r.sh <user> <path> ..."
+    echo "if user/group is EMPTY or 0, the acl is set for no named user/group"
+    echo "Usage: setacl-def-u-r.sh <recalculate mask? (0/1)> <user> <path> ..."
 }
 
-if [ "$2" = "" ]; then
+if [ "$3" = "" ]; then
     usage
     exit 1
 fi
 
+if [ "$1" = "1" ]; then
+    RECALCULATEMASKOPTION=""
+else
+    RECALCULATEMASKOPTION="-n"
+fi
+
 #
+if [ "$2" = "EMPTY" ] || [ "$2" = "0" ]; then
+    USERID=""
+else
+    USERID="$2"
+fi
 
 i=0
 
 for arg in "$@"; do
-    if [ $i -ge 1 ]; then
+    if [ $i -ge 2 ]; then
         echo ">> Path: $arg"
 
-        find -P "$arg" -type d -perm -u=rwx -exec setfacl -dm u:$1:rwx {} \;
-        find -P "$arg" -type d -perm -u=rx ! -perm /u=w -exec setfacl -dm u:$1:rx {} \;
+        find -P "$arg" -type d -perm -u=rwx -exec setfacl "$RECALCULATEMASKOPTION" -dm u:"$USERID":rwX {} \;
+        find -P "$arg" -type d -perm -u=rx ! -perm /u=w -exec setfacl "$RECALCULATEMASKOPTION" -dm u:"$USERID":rX {} \;
     fi
-    i=$((i+1));
+    i=$((i+1))
 done
 
 exit 0
